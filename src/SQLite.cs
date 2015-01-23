@@ -399,6 +399,10 @@ namespace SQLite
 		    var @using = fts3 ? "using fts3 " : fts4 ? "using fts4 " : string.Empty;
 
             // Build query.
+			if (map.Columns.Length == 0) {
+				throw new Exception(string.Format("Cannot create a table with zero columns (does '{0}' have public properties?)", ty.FullName));
+			}
+
 			var query = "create " + @virtual + "table if not exists \"" + map.TableName + "\" " + @using + "(\n";
 			var decls = map.Columns.Select (p => Orm.SqlDecl (p, StoreDateTimeAsTicks));
 			var decl = string.Join (",\n", decls.ToArray ());
